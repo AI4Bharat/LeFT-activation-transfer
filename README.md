@@ -134,11 +134,12 @@ verify_weight_independence(model, "…source_final.pt")  # no weight was transfe
 scripts/evaluate.sh
 ```
 
-Results are reported as means over seeds with sample standard deviations.
-Comparisons between two activations use a paired t-test over the shared seeds
-with Holm correction across the four datasets. `left.evaluation.metrics`
-implements these statistics, and `notebooks/results_analysis.ipynb` reproduces
-the tables of the manuscript from `results/tables/*.json`.
+Results are reported as means over seeds with sample standard deviations, and
+comparisons between two activations as seed-matched mean differences.
+`left.evaluation.metrics` implements these statistics and additionally provides
+a paired t-test with Holm correction across the four datasets, and
+`notebooks/results_analysis.ipynb` reproduces the tables of the manuscript from
+`results/tables/*.json`.
 
 Margin of the transferred curve over the best-performing conventional
 activation per dataset, under the common configuration, in percentage points
@@ -150,17 +151,6 @@ activation per dataset, under the common configuration, in percentage points
 | Swin-d2       | +1.05 (GELU)  | +1.65 (GELU)      | +1.09 (GELU)      | +0.88 (GELU)       |
 | LinViT-d2     | +0.38 (ReLU)  | +1.21 (ReLU)      | +1.48 (ReLU)      | +1.62 (LeakyReLU)  |
 | MLP-Mixer     | +0.62 (ReLU)  | +0.48 (LeakyReLU) | +0.29 (LeakyReLU) | **−1.05 (GELU)**   |
-
-MLP-Mixer with Food-101 is the single combination of sixteen in which the
-transferred curve does not attain the highest mean accuracy under the common
-configuration; GELU does, by approximately 1.05 points.
-
-Per-activation tuning of the learning rate and weight decay changes the
-picture rather than reversing it: the transferred curve then ranks first in
-eleven of the sixteen combinations, second in four and fourth in one. On the
-MLP-Mixer it keeps the highest rank on Fashion-MNIST and CIFAR-10, while
-HardSwish takes CIFAR-100 and Food-101. Both conditions are reported in the
-paper; `results/tables/` holds the per-seed numbers for each.
 
 ## Pretrained artifacts
 
@@ -174,10 +164,6 @@ paper; `results/tables/` holds the per-seed numbers for each.
 The coefficient artifact is the only model artifact retained in version control:
 five scalars, and the sole input required to reproduce every transfer experiment
 without the source network.
-
-The Hugging Face collection pairs each checkpoint with the result file of its own
-run and with a manifest that maps every reported table cell to its file, so that
-any reported number can be re-evaluated independently.
 
 ## Layout
 

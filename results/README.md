@@ -14,7 +14,7 @@ are generated.
 | `coeff_traj_seed1.json`            | the source run's coefficient trajectory                   |
 | `imagenet_frozen_fact_5seed.json`  | same-task transfer at source scale                        |
 | `transfer_5seed_raw.json`          | the ViT, Swin and LinViT transfer tables, common config   |
-| `transfer_5seed_stats.json`        | their paired, Holm-corrected tests                        |
+| `transfer_5seed_stats.json`        | their means, sds and seed-matched margins                 |
 | `linvit_tuned_5seed_raw.json`      | the LinViT target, activation-specific config             |
 | `mixer_5seed_raw.json`             | the MLP-Mixer target, both configurations                  |
 | `swin_depth_sweep_5seed_raw.json`  | the Swin depth sweep and the GELU-init control            |

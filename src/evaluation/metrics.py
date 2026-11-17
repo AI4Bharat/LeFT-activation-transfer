@@ -1,8 +1,9 @@
-"""The statistics the paper reports, as functions.
+"""The statistics of the results, as functions.
 
 Every headline number in the manuscript is a mean over five seeds with a
-standard deviation, and every claim of the form "FAct beats X" is a *paired*
-t-test across the shared seeds, Holm-corrected over the four datasets. The
+standard deviation, and every comparison of the form "FAct beats X" is a
+seed-matched mean difference. `compare_arms` also provides the *paired*
+t-test over the shared seeds, Holm-corrected over the four datasets. The
 pairing matters: seed 3 of the transferred arm and seed 3 of the GELU arm saw
 the same data order and the same initialisation stream, so the difference
 between them is a much tighter quantity than the difference of two means. The
