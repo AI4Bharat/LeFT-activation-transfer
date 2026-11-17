@@ -1,0 +1,8 @@
+# Fashion-MNIST: 60K train / 10K test, 28x28 grayscale, 10 classes.
+# Downloaded on demand by torchvision into $LEFT_DATA_ROOT/FashionMNIST/raw.
+data:
+  dataset: fmnist
+  batch_size: 256
+  num_workers: 4
+optim:
+  epochs: 100         # the published budget, identical on all four datasets

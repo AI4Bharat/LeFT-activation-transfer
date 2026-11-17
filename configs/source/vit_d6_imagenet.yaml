@@ -1,0 +1,41 @@
+# Step 1 -- LEARN. The source run: one globally shared FAct curve, learned
+# jointly with a depth-6 ~3M-parameter ViT on ImageNet-1K.
+#
+# This is the only expensive run in the repository (~100 epochs on ImageNet-1K)
+# and the only one most readers can skip: its entire output, for transfer
+# purposes, is the five numbers in artifacts/fact/imagenet1k_vitd6_seed1.json.
+#
+# Run with:
+#   python -m left.training.train_source --dataset imagenet1k \
+#       --variants fact_k2_global --seeds 1 --epochs 100
+# (train_source delegates to the vendored published launcher, which takes these
+# values as flags rather than reading this file -- the file is the record of
+# what was run.)
+
+activation:
+  name: fact_k2_global     # learnable, globally shared, GELU-fit initialised
+  harmonics: 2             # K=2 -> five scalars for the whole network
+  omega: 1.0               # base frequency; fixed, see docs/methodology.md
+  shared: true             # one curve for every block and every neuron
+  trainable: true          # this is the Learn step
+
+model:
+  architecture: vit
+  embed_dim: 192
+  depth: 6
+  num_heads: 6
+  mlp_ratio: 4.0
+  dropout: 0.1
+
+data:
+  dataset: imagenet1k
+  batch_size: 256
+  num_workers: 16
+
+optim:
+  epochs: 100
+  lr: 1.0e-3
+  wd: 0.05
+  warmup_epochs: 5
+  label_smoothing: 0.1
+  seed: 1                  # seeds 1-5 all ran; all five agree on the curve

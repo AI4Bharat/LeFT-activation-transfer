@@ -1,0 +1,13 @@
+# Target architecture 4 of 4: an MLP-Mixer with NO attention at all --
+# token-mixing and channel-mixing MLPs only. embed_dim 76 puts it in the same
+# ~100-130K parameter band as the other three. This is the strongest test of
+# the transfer claim: the curve was learned inside a self-attention network and
+# is installed in an architecture that has none.
+
+include: vit_d2.yaml
+
+model:
+  architecture: mlpmixer
+  embed_dim: 76
+  depth: 2
+  dropout: 0.1

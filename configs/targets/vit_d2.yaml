@@ -1,0 +1,34 @@
+# Steps 2-3 -- FREEZE and TRANSFER. Target architecture 1 of 4: the depth-2
+# ~114K-parameter ViT. Same family as the source network, 27x smaller, and
+# independently initialised -- no source weight is loaded.
+#
+#   python -m left.training.train_target --config configs/targets/vit_d2.yaml \
+#       --config configs/datasets/cifar10.yaml --act fact_fixed --seed 0 \
+#       --out-dir results/logs/vit/cifar10
+
+activation:
+  name: fact_fixed         # the transferred curve, as a parameter-free function
+  artifact: artifacts/fact/imagenet1k_vitd6_seed1.json
+  harmonics: 2
+  omega: 1.0
+  shared: true
+  trainable: false         # frozen: zero activation parameters
+
+transfer:
+  freeze_activation: true
+  transfer_weights: false  # the claim; verified by tests/test_transfer.py
+
+model:
+  architecture: vit
+  embed_dim: 64
+  depth: 2
+  num_heads: 4
+  mlp_ratio: 4.0
+  dropout: 0.1
+
+optim:
+  lr: 1.0e-3
+  wd: 0.05
+  warmup_epochs: 5
+  label_smoothing: 0.1
+  seed: 0                  # the paper reports seeds 0-4

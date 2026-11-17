@@ -1,0 +1,16 @@
+# Target architecture 2 of 4: a parameter- and token-matched depth-2 Swin at
+# Swin's native patch 4. Same FFN sandwich and the same single shared
+# activation, with shifted-window attention in place of global attention -- so
+# it asks whether a curve learned under global attention survives a different
+# attention mechanism.
+
+include: vit_d2.yaml
+
+model:
+  architecture: swin
+  embed_dim: 64
+  depth: 2
+  num_heads: 4
+  mlp_ratio: 4.0
+  window: 4
+  patch_size: 4

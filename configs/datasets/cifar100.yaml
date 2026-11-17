@@ -1,0 +1,7 @@
+# CIFAR-100: 50K train / 10K test, 32x32 RGB, 100 classes.
+data:
+  dataset: cifar100
+  batch_size: 256
+  num_workers: 4
+optim:
+  epochs: 100

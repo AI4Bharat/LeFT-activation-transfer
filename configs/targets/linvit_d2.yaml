@@ -1,0 +1,13 @@
+# Target architecture 3 of 4: the same ViT with elu+1 linear attention,
+# parameter-identical to vit_d2. Softmax attention is replaced by a kernel
+# feature map, so the pre-activation distribution reaching the shared curve is
+# produced by a different mechanism again.
+
+include: vit_d2.yaml
+
+model:
+  architecture: linvit
+  embed_dim: 64
+  depth: 2
+  num_heads: 4
+  mlp_ratio: 4.0

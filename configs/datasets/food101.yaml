@@ -1,0 +1,8 @@
+# Food-101: 75,750 train / 25,250 test, 101 fine-grained classes.
+# Images are resized to the common target-scale input size.
+data:
+  dataset: food101
+  batch_size: 256
+  num_workers: 4
+optim:
+  epochs: 100

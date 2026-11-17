@@ -1,0 +1,9 @@
+# CIFAR-10: 50K train / 10K test, 32x32 RGB, 10 classes.
+# Read from the pre-decoded tensor cache $LEFT_DATA_ROOT/hf/c10_{train,test}_decoded.pt
+# (build it once with scripts/prepare_data.sh).
+data:
+  dataset: cifar10
+  batch_size: 256
+  num_workers: 4
+optim:
+  epochs: 100
