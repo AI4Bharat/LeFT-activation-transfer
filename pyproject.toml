@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "left-activation-transfer"
+version = "1.0.0"
+description = "LeFT: learn a globally shared activation in one network, freeze it, transfer it to another"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Arun Prakash A" }]
+keywords = ["activation functions", "learnable activations", "transfer learning",
+            "vision transformers", "fourier series"]
+dependencies = [
+  "torch>=2.0",
+  "numpy>=1.24,<2",
+  "scipy>=1.10",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+train = ["torchvision>=0.15", "pillow>=9.0", "pyarrow>=12.0",
+         "huggingface-hub>=0.20", "ninja>=1.11"]
+imagenet = ["datasets>=2.14", "pandas>=1.5"]
+notebooks = ["matplotlib>=3.6"]
+dev = ["pytest>=7.0"]
+
+[project.urls]
+Repository = "https://github.com/AI4Bharat/LeFT-activation-transfer"
+
+# The package lives in src/ and is imported as `left`:
+#     from left.activations import FAct
+#     from left.transfer import install, assert_frozen
+[tool.setuptools]
+package-dir = { left = "src" }
+packages = [
+  "left",
+  "left.activations",
+  "left.models",
+  "left.training",
+  "left.training.source",
+  "left.transfer",
+  "left.evaluation",
+  "left.utils",
+]
+
+[tool.setuptools.package-data]
+left = ["activations/*.json", "activations/cuda_fixed_fact_k2/*.cu",
+        "training/source/cuda_*/*.cu"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,48 @@
+# Datasets and caches -- never committed. See scripts/prepare_data.sh.
+/datasets/
+/data/
+*.parquet
+*_decoded.pt
+
+# Model checkpoints. Large artifacts belong on Hugging Face; the only model
+# artifact this repository ships is the five-number coefficient JSON in
+# artifacts/, which is tracked on purpose.
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+!artifacts/**/*.json
+
+# Run outputs. results/tables/ is tracked (aggregated numbers); raw per-run
+# logs are not, apart from any committed deliberately.
+results/logs/**
+!results/logs/.gitkeep
+runs/
+wandb/
+slurm-*.out
+*slurmspawner*.log
+
+# Build and environment
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+.venv/
+venv/
+env/
+.python-version
+
+# Tooling
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+.vscode/
+.idea/
+
+# Secrets -- never commit credentials or tokens
+.env
+*.key
+*token*
+!**/tokenizer*

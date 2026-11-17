@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite this repository."
+title: "LeFT: Learn, Freeze, and Transfer an Activation Function Across Architectures"
+abstract: >-
+  LeFT is a framework for learning a globally shared activation function inside
+  a source network, freezing it, and transferring it to independently
+  initialized target networks without transferring any source-network weights.
+  This repository holds the framework, two activation implementations (FAct, a
+  truncated Fourier series; PAU, a Pade rational function), the four target
+  architectures, and the learned coefficient artifact behind the paper's
+  results.
+type: software
+authors:
+  - family-names: "A"
+    given-names: "Arun Prakash"
+    affiliation: "Nilekani Centre at AI4Bharat, Indian Institute of Technology Madras"
+version: "1.0.0"
+date-released: "2026-11-05"
+license: MIT
+repository-code: "https://github.com/AI4Bharat/LeFT-activation-transfer"
+keywords:
+  - activation functions
+  - learnable activations
+  - transfer learning
+  - vision transformers
+  - fourier series

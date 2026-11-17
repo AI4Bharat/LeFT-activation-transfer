@@ -1,0 +1,32 @@
+# conda env create -f environment.yml && conda activate left
+#
+# The published runs spanned several hosts and therefore several builds (torch
+# 2.5-2.10, CUDA 12.1-13.0); the results do not depend on the build, since every
+# run is fp32 with AMP off. This file pins one working combination -- on a
+# machine with a different driver, install torch from pytorch.org for that CUDA
+# version instead and keep the rest.
+name: left
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - numpy>=1.24,<2
+  - scipy>=1.10
+  - pyyaml>=6.0
+  - pandas>=1.5
+  - pyarrow>=12.0
+  - pillow>=9.0
+  - ninja>=1.11
+  - pytest>=7.0
+  - jupyterlab
+  - matplotlib>=3.6   # notebooks/
+  - pytorch>=2.0
+  - torchvision>=0.15
+  - pytorch-cuda=12.1
+  - pip:
+      - huggingface-hub>=0.20
+      - datasets>=2.14     # ImageNet-1K source step only
+      - -e .
