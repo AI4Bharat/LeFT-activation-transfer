@@ -1,0 +1,66 @@
+{
+  "source": "ViT-d2, common configuration: the frozen transferred curve against the same activation learned in the target network",
+  "note": "test top-1 (%) per seed; fact_fixed is the frozen transferred curve (six seeds), fact_k2_global the target-trained learnable FAct (five seeds). The seed counts differ, as in the manuscript.",
+  "acc": {
+    "fmnist|fact_fixed": [
+      90.83,
+      90.83,
+      91.05,
+      91.02,
+      90.96,
+      91.02
+    ],
+    "fmnist|fact_k2_global": [
+      90.9,
+      91.13,
+      91.12,
+      91.36,
+      90.87
+    ],
+    "cifar10|fact_fixed": [
+      75.87,
+      75.7,
+      75.61,
+      75.65,
+      74.95,
+      74.94
+    ],
+    "cifar10|fact_k2_global": [
+      75.29,
+      75.71,
+      75.55,
+      75.42,
+      75.81
+    ],
+    "cifar100|fact_fixed": [
+      47.49,
+      47.62,
+      47.57,
+      47.19,
+      48.48,
+      48.36
+    ],
+    "cifar100|fact_k2_global": [
+      46.72,
+      46.86,
+      47.1,
+      46.22,
+      46.76
+    ],
+    "food101|fact_fixed": [
+      36.099,
+      35.2198,
+      35.8297,
+      36.103,
+      35.905,
+      35.7465
+    ],
+    "food101|fact_k2_global": [
+      35.5683,
+      35.501,
+      34.6653,
+      34.895,
+      35.3584
+    ]
+  }
+}

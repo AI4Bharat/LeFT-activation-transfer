@@ -1,0 +1,11 @@
+{
+ "source": "ImageNet-1K depth-6 frozen-FAct ablation, 5 seeds; pulled 2026-10-28",
+ "note": "ViT-d6 ImageNet-1K, fresh weights, seed-1 learned FAct coefficients frozen; test top-1 % by seed",
+ "test_by_seed": {
+  "1": 63.904,
+  "2": 64.138,
+  "3": 63.938,
+  "4": 63.756,
+  "5": 63.812
+ }
+}
