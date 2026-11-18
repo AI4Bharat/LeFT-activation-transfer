@@ -11,7 +11,7 @@ import numpy as np
 import pytest
 import torch
 
-from left.activations import FAct, PAU, gelu_init_coefficients
+from left.activations import FAct, gelu_init_coefficients
 from left.activations.fact_fixed import FixedFAct
 from left.activations.fact_k2_global_trainable import FactK2GlobalTrainable
 from left.activations.fourier_fit import (fourier_coeffs, fourier_series_eval,
@@ -128,7 +128,8 @@ def test_strict_load_refuses_a_mismatched_artifact():
     with pytest.raises(ValueError):
         a2.load_coefficients(a5.coefficients(), strict=True)
     with pytest.raises(ValueError):
-        a2.load_coefficients(PAU().coefficients(), strict=True)
+        a2.load_coefficients({"family": "spline", "K": 2, "a0": 0.0,
+                              "a": [0.0, 0.0], "b": [0.0, 0.0]}, strict=True)
 
 
 def test_shipped_artifact_is_the_manuscripts_curve(artifact_path):
@@ -138,42 +139,3 @@ def test_shipped_artifact_is_the_manuscripts_curve(artifact_path):
     reported = [0.2182, 0.1193, -0.4237, 0.8315, -0.5918]
     got = [art["a0"], art["a"][0], art["a"][1], art["b"][0], art["b"][1]]
     assert got == pytest.approx(reported, abs=5e-5)
-
-
-def test_pau_is_a_transferable_activation_too():
-    """LeFT is not FAct: the second implementation must satisfy the same
-    contract."""
-    src = PAU(m=5, n=4)
-    with torch.no_grad():
-        src.a.add_(0.05)
-    dst = PAU(m=5, n=4, ref=None)
-    dst.load_coefficients(src.coefficients())
-    t = torch.linspace(-4, 4, 401)
-    assert torch.allclose(src(t), dst(t), atol=1e-6)
-    assert dst.freeze().num_activation_parameters() == 0
-
-
-# --- the Appendix C control: the transferred Pade curve ------------------- #
-def test_pau_fixed_is_registered_and_parameter_free():
-    """Appendix C's arm has to be buildable by name, or the published PAU
-    checkpoints cannot be re-evaluated, and it has to be capacity-identical to
-    GELU like every other frozen arm."""
-    from left.activations.zoo import build_act
-    act = build_act("pau_fixed")
-    assert act.__class__.__name__ == "FixedPAU"
-    assert sum(p.numel() for p in act.parameters() if p.requires_grad) == 0
-
-
-def test_pau_fixed_carries_the_transferred_curve(repo_root):
-    """The shipped artifact is the curve the ImageNet-1K source learned, and the
-    module must evaluate that curve (and stay finite: a rational activation has
-    a denominator that could vanish)."""
-    import json
-    import torch
-    from left.activations.pau_fixed import DEFAULT_COEFF_JSON, FixedPAU
-    d = json.load(open(DEFAULT_COEFF_JSON))
-    assert (d["m"], d["n"]) == (5, 4)
-    act = FixedPAU()
-    assert float(act(torch.zeros(1))) == pytest.approx(d["a"][0], abs=1e-6)
-    y = act(torch.linspace(-50, 50, 20001))
-    assert torch.isfinite(y).all()

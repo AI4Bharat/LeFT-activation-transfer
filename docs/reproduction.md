@@ -12,13 +12,13 @@ pip install -e ".[dev]"
 pytest -q
 ```
 
-The suite comprises 58 tests, which verify the claims rather than merely the
+The suite comprises 55 tests, which verify the claims rather than merely the
 execution of the code: that the GELU initialisation matches the reported fit,
 that K is configurable, that each of the four architectures holds exactly one
 shared activation instance, that a frozen curve receives no update under an
 AdamW step with weight decay, that an unfrozen curve does receive one, that
 only coefficients are transferred from source to target, and that a
-deliberately introduced source weight is detected. Five of the 58 compare the
+deliberately introduced source weight is detected. Five of the 55 compare the
 fused CUDA kernel against the reference path and skip without a GPU, and four
 recompute the figures quoted in README.md from `results/tables/`.
 
@@ -117,7 +117,7 @@ ARTIFACT=artifacts/fact/imagenet1k_vitd6_seed1_reproduced.json scripts/train_tar
 ```
 
 `src/training/source/` contains the published source-training code, reduced to
-the arms this paper reports (`standard`, `fact_k2_global`, `pau_global`) and
+the arms this paper reports (`standard` and `fact_k2_global`) and
 otherwise unmodified, including its flat imports, so that this path re-runs the
 original implementation rather than a refactored version of it.
 

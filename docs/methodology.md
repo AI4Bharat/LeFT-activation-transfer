@@ -70,15 +70,13 @@ the source network's pre-activation distribution that is local to a particular
 layer, and it is this property that makes a learned shape plausible as a
 transferable quantity rather than a fitted one.
 
-The claim is evaluated rather than assumed. `src/activations/pade.py` repeats
-the protocol with PAU, a rational parameterisation in a local basis. A shared
-PAU learned in the same source network and frozen into the depth-2 ViT target
-also exceeds GELU on all four datasets, and exceeds frozen FAct on that target
-by 0.16 to 0.87 percentage points. The effect is therefore a property of
-globally shared learned nonlinearities in general rather than of the Fourier
-basis specifically, which is why the framework and the activation are kept
-separate in this repository. This comparison covers one target architecture
-only.
+This motivates the choice of basis; it is not itself one of the paper's
+results, which concern the transfer of a single globally shared learned curve
+rather than a comparison of bases. The framework and the activation are kept
+separate in this repository for the same reason: `left.transfer` moves a
+coefficient artifact and knows nothing about Fourier series, so another
+globally shared parameterisation can be substituted without altering the
+protocol.
 
 ## Harmonic count and frequency
 

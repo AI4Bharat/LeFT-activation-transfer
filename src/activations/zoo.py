@@ -96,13 +96,6 @@ def build_act(kind, use_cuda_kernel=True):
         return kind
     if kind == "fact_fixed":
         return FixedFAct(use_cuda_kernel=use_cuda_kernel)
-    if kind == "pau_fixed":
-        # The transferred Pade (5,4) curve of Appendix C: the same
-        # learn-freeze-transfer protocol with a rational activation instead of
-        # a Fourier one. Not in ACT_KINDS -- it is its own comparison, against
-        # Frozen FAct and GELU on ViT-d2.
-        from left.activations.pau_fixed import FixedPAU
-        return FixedPAU(use_cuda_kernel=use_cuda_kernel)
     if kind == "fact_k2_global":
         # Evolving FAct (EFAct): the only kind in this registry with
         # learnable parameters. Not in ACT_KINDS -- see the note above it.
@@ -116,8 +109,8 @@ def build_act(kind, use_cuda_kernel=True):
     if kind in _BUILTINS:
         return _BUILTINS[kind]()
     raise ValueError(f"unknown activation kind: {kind!r} (expected one of "
-                     f"{ACT_KINDS}, 'fact_k2_global', "
-                     f"'fact_k2_global_frozen' or 'pau_fixed')")
+                     f"{ACT_KINDS}, 'fact_k2_global' or "
+                     f"'fact_k2_global_frozen')")
 
 
 def act_param_count(kind, use_cuda_kernel=True):

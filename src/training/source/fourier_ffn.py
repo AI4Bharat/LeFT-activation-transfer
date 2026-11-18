@@ -9,7 +9,7 @@ residuals are identical in both.
 """
 import torch.nn as nn
 
-from fourier_layers import parse_global_k, parse_pau_global
+from fourier_layers import parse_global_k
 
 
 class StandardFFN(nn.Module):
@@ -35,9 +35,8 @@ class FactFFN(nn.Module):
 
     `act` is the ONE activation module the caller (cv_vit.VisionTransformer)
     built once and reuses for every layer: passing the same nn.Module (same
-    parameter tensors) to every FactFFN is what makes `fact_k2_global` /
-    `pau_global` one nonlinearity for the whole network rather than one per
-    layer.
+    parameter tensors) to every FactFFN is what makes `fact_k2_global` one
+    nonlinearity for the whole network rather than one per layer.
     """
 
     def __init__(self, d_model, d_ff, act, dropout=0.1):
@@ -60,16 +59,13 @@ FFN_VARIANTS = [
                             # the whole network applies the exact same
                             # nonlinearity everywhere. W1/W2 stay per-layer.
                             # Any "fact_kK_global" name works the same way.
-    "pau_global",           # fact_k2_global's sharing convention with a Pade
-                            # Activation Unit (order (5,4)) in place of the
-                            # Fourier series.
 ]
 
 
 def build_ffn(kind, d_model, d_ff_standard, dropout, act=None):
     if kind == "standard":
         return StandardFFN(d_model, d_ff_standard, dropout)
-    if parse_global_k(kind) is not None or parse_pau_global(kind):
+    if parse_global_k(kind) is not None:
         # `act` must be the ONE activation module the caller
         # (cv_vit.VisionTransformer) built once and is reusing across every
         # layer -- these variants have no meaning per-layer in isolation.

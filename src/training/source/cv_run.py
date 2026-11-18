@@ -21,7 +21,7 @@ from cv_train import train_one
 from fourier_layers import parse_global_k
 
 HERE = os.path.dirname(__file__)
-CV_FFN_VARIANTS = ["standard", "fact_k2_global", "pau_global"]
+CV_FFN_VARIANTS = ["standard", "fact_k2_global"]
 # Epoch-coefficient logging and save_epoch_ckpts below key off
 # parse_global_k, so any "fact_kK_global" name (K = any positive int) is
 # covered, not a hand-maintained {"fact_k2_global", ...} set.

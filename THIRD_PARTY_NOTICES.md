@@ -15,11 +15,6 @@ depends upon, reimplements or redistributes the components listed below.
 
 ## Methods reimplemented here
 
-* **PAU (Padé Activation Units)**: `src/activations/pade.py` is an independent
-  implementation of the activation described in Molina, Schramowski and
-  Kersting, *Padé Activation Units: End-to-end Learning of Flexible Activation
-  Functions in Deep Networks* (ICLR 2020). No code from the authors' release is
-  included.
 * **Swin Transformer**: `src/models/swin.py` implements shifted-window
   attention following Liu et al. (ICCV 2021). It was written from the
   publication and is not derived from the Microsoft release.

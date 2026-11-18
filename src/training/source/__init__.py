@@ -3,8 +3,8 @@
 These modules -- `cv_run`, `cv_train`, `cv_vit`, `cv_data`, `fourier_ffn`,
 `fourier_layers` -- are the code that trained the paper's ImageNet-1K source
 network (the depth-6, ~3M-parameter ViT whose learned curve every target run
-transfers). They are reduced to the three FFN variants this paper reports --
-`standard`, `fact_k2_global` and `pau_global` -- and otherwise unchanged,
+transfers). They are reduced to the two FFN variants this paper reports --
+`standard` and `fact_k2_global` -- and otherwise unchanged,
 including their flat intra-package imports, so that a reproduction of the
 source run re-runs the published implementation rather than a refactor of it.
 New work should prefer `left.activations.FAct` and

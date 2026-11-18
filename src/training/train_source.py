@@ -26,7 +26,7 @@ installed package rather than under `--out-dir`.
 
 `--variants` selects the activation in the source parameterisation
 (`fact_k2_global` is the paper's learnable shared Fourier arm, `gelu` its
-baseline, `pau_global` the shared Pade control).
+baseline).
 
 Outputs, all under `--out-dir`:
 

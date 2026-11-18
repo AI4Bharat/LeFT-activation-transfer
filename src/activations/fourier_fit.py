@@ -74,23 +74,6 @@ def fourier_coeffs(K, L=math.pi, n_grid=4096, quadrature="trapezoid"):
     return float(a0), a.astype(np.float32), b.astype(np.float32), float(w)
 
 
-def pade_coeffs(m=5, n=4, L=math.pi, n_grid=4096):
-    """Return ``(a[m+1], b[n])``: a degree-(m, n) Pade fit of GELU on [-L, L],
-    P(t) = sum_j a_j t^j, Q(t) = 1 + sum_k b_k t^k.
-
-    Solved as linear least squares: f = P/Q rearranges to P(t) - f(t) Q(t) = 0,
-    which is linear in {a_j, b_k}. PAU's forward uses |b_k| in Q, so this fit
-    (which permits either sign) is a starting point, not a pole-free guarantee.
-    """
-    f = gelu_np
-    t = np.linspace(-L, L, n_grid)
-    ft = f(t)
-    cols = [t ** j for j in range(m + 1)] + [-ft * (t ** k) for k in range(1, n + 1)]
-    A = np.stack(cols, axis=1)
-    coef, *_ = np.linalg.lstsq(A, ft, rcond=None)
-    return coef[:m + 1].astype(np.float32), coef[m + 1:].astype(np.float32)
-
-
 def fourier_series_eval(t, a0, a, b, w=1.0):
     """Evaluate the truncated series on a numpy array (plots and tests)."""
     out = np.full_like(np.asarray(t, dtype=np.float64), float(a0))

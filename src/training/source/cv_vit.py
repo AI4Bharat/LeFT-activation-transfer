@@ -6,7 +6,7 @@ patch/img size per dataset) is deliberately plain and was fixed before any
 activation was compared on it, so no choice here was tuned for FAct. The one
 non-obvious piece is that the MLP block is built by fourier_ffn.build_ffn
 rather than a bespoke MLP class, which is what makes the FFN_VARIANTS menu --
-standard, fact_k2_global, pau_global -- selectable by string on one model.
+standard and fact_k2_global -- selectable by string on one model.
 
 fact_k2_global: ONE FourierActivation module is built once in
 VisionTransformer.__init__ and handed by reference to every one of the
@@ -17,8 +17,7 @@ import torch
 import torch.nn as nn
 
 from fourier_ffn import build_ffn
-from fourier_layers import (PAU, FourierActivation, parse_global_k,
-                            parse_pau_global)
+from fourier_layers import FourierActivation, parse_global_k
 
 DEPTH_DEFAULT = 6
 NUM_HEADS_DEFAULT = 6
@@ -143,20 +142,6 @@ class VisionTransformer(nn.Module):
                 shared_act = FourierActivationK2CUDA(d_ff_standard, shared=True)
             else:
                 shared_act = FourierActivation(d_ff_standard, K=k_global, shared=True)
-        elif parse_pau_global(ffn_kind):
-            # pau_global: the SAME construction as fact_kK_global, but the
-            # shared activation is a Pade Activation Unit (Molina et al.,
-            # ICLR 2020 -- P(t)/Q(t), order (5,4), |b_k| denominator -- see
-            # PAU, which is NOT the paper's pole-free "safe" form) rather
-            # than a Fourier series: ONE {a, b} coefficient pair (shared=True
-            # ties them across neurons too) for the entire network, fitted to
-            # GELU at init like FourierActivation, so this leg is comparable
-            # to fact_k2_global at t=0.
-            if use_cuda_act:
-                from cuda_pau.pau_module import PAUCUDA
-                shared_act = PAUCUDA(d_ff_standard, shared=True)
-            else:
-                shared_act = PAU(d_ff_standard, shared=True)
         self.shared_act = shared_act
 
         self.blocks = nn.ModuleList([

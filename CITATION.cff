@@ -5,10 +5,9 @@ abstract: >-
   LeFT is a framework for learning a globally shared activation function inside
   a source network, freezing it, and transferring it to independently
   initialized target networks without transferring any source-network weights.
-  This repository holds the framework, two activation implementations (FAct, a
-  truncated Fourier series; PAU, a Pade rational function), the four target
-  architectures, and the learned coefficient artifact behind the paper's
-  results.
+  This repository holds the framework, the activation implementation (FAct, a
+  truncated Fourier series), the four target architectures, and the learned
+  coefficient artifact behind the paper's results.
 type: software
 authors:
   - family-names: "A"

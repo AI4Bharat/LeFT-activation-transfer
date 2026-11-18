@@ -67,7 +67,7 @@ pip install -e ".[train,dev]"            # and target-network training
 pip install -e ".[train,imagenet,dev]"   # and re-training of the ImageNet-1K source
 # alternatively: conda env create -f environment.yml && conda activate left
 
-pytest -q                                # 58 tests; no datasets required (5 need a GPU and skip without one)
+pytest -q                                # 55 tests; no datasets required (5 need a GPU and skip without one)
 ```
 
 `ninja` is required only for the fused CUDA kernels; the pure-PyTorch path
@@ -153,7 +153,7 @@ without the source network.
 ## Layout
 
 ```
-src/activations/   FAct (configurable K), PAU, the GELU-fit quadratures and the
+src/activations/   FAct (configurable K), the GELU-fit quadratures and the
                    eleven activations under comparison, together with the
                    published implementations verbatim, including the fused CUDA
                    kernel

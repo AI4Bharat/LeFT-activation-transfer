@@ -6,9 +6,9 @@ networks without transferring any source-network weight.
 
 The framework is deliberately independent of any particular activation family:
 `left.transfer` moves a *coefficient artifact* between networks and knows
-nothing about Fourier series. `left.activations.fact` (truncated Fourier) and
-`left.activations.pade` (Pade / PAU) are two implementations that satisfy the
-`SharedActivation` protocol it expects.
+nothing about Fourier series. `left.activations.fact` (truncated Fourier) is
+the implementation the paper reports, and satisfies the `SharedActivation`
+protocol the framework expects.
 """
 
 __version__ = "1.0.0"
