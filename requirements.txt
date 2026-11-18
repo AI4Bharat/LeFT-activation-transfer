@@ -7,7 +7,7 @@ pyyaml>=6.0           # configs/
 # Training the target networks.
 torchvision>=0.15     # Fashion-MNIST and Food-101
 pillow>=9.0           # image decode (a torchvision dependency already)
-pyarrow>=12.0         # the CIFAR parquet -> tensor cache
+pyarrow>=12.0,<17     # the CIFAR parquet -> tensor cache; 18.0+ needs numpy>=2
 huggingface-hub>=0.20 # dataset and checkpoint downloads
 
 # The fused CUDA kernels (src/activations/cuda_*, src/training/source/cuda_*) are

@@ -20,7 +20,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-train = ["torchvision>=0.15", "pillow>=9.0", "pyarrow>=12.0",
+# pyarrow is capped: 18.0 onwards requires NumPy >= 2 at import time, which
+# contradicts the numpy<2 pin above and breaks the CIFAR cache builder.
+train = ["torchvision>=0.15", "pillow>=9.0", "pyarrow>=12.0,<17",
          "huggingface-hub>=0.20", "ninja>=1.11"]
 imagenet = ["datasets>=2.14", "pandas>=1.5"]
 notebooks = ["matplotlib>=3.6"]

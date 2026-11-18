@@ -22,11 +22,11 @@ are generated.
 | `swin_tuned_5seed_raw.json`        | the Swin target, activation-specific config               |
 | `vit_relearn_raw.json`             | the frozen curve against one learned in the target        |
 
-Every file holds per-seed test top-1, over the five seeds the paper reports
-except where noted. Coverage: both configurations, common and
-activation-specific, for all four target architectures. In
-`vit_relearn_raw.json` the frozen arm has six seeds and the target-trained arm
-five, as in the manuscript.
+Every file holds per-seed test top-1, over the five seeds the paper reports.
+Coverage: both configurations, common and activation-specific, for all four
+target architectures. In `vit_relearn_raw.json` both arms use those same five
+seeds, and its `fact_fixed` values are the same runs reported in
+`transfer_5seed_raw.json`, as the manuscript states.
 
 The scripts that convert these files into LaTeX are distributed with the
 manuscript rather than with this repository.
