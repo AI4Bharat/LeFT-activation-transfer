@@ -1,10 +1,10 @@
 """The numbers in the documentation are the manuscript's numbers.
 
 Every figure quoted in README.md is recomputed here from the per-seed files in
-`results/tables/`, so a stale table in the prose fails the suite instead of
-misreporting a result. The margins, the "15 of 16" claim and the five-seed
-convention are all checked against the same data the manuscript's tables were
-generated from.
+`results/tables/`, so a stale number in the prose fails the suite instead of
+misreporting a result. The "15 of 16" claim, the five-seed convention, the
+parameter counts and the quoted coefficients are all checked against the same
+data the manuscript's tables were generated from.
 """
 import json
 import os
@@ -17,9 +17,6 @@ import pytest
 CONVENTIONAL = ("relu", "leaky_relu", "gelu", "silu", "mish", "hardswish",
                 "softplus", "elu", "selu", "tanh")
 DATASETS = ("fmnist", "cifar10", "cifar100", "food101")
-LABEL = {"relu": "ReLU", "leaky_relu": "LeakyReLU", "gelu": "GELU",
-         "silu": "SiLU", "mish": "Mish", "hardswish": "HardSwish",
-         "softplus": "Softplus", "elu": "ELU", "selu": "SELU", "tanh": "Tanh"}
 #: README row label -> (file, section) holding that target's common-config runs
 ROWS = (("ViT-d2", "vit"), ("Swin-d2", "swin"), ("LinViT-d2", "linvit"),
         ("MLP-Mixer", "mlpmixer"))
@@ -48,37 +45,6 @@ def _margin(cells):
     best = max((a for a in cells if a in CONVENTIONAL),
                key=lambda a: st.mean(cells[a]))
     return fact - st.mean(cells[best]), best
-
-
-def _readme_margins(repo_root):
-    """Parse the README's margin table into {target: {dataset: (value, label)}}."""
-    with open(os.path.join(repo_root, "README.md")) as f:
-        text = f.read()
-    cell = re.compile(r"([+\-−][\d.]+)\s*\(([A-Za-z]+)\)")
-    found = {}
-    for label, arch in ROWS:
-        line = next((ln for ln in text.splitlines()
-                     if ln.startswith(f"| {label}")), None)
-        assert line, f"no margin row for {label} in README.md"
-        cells = cell.findall(line)
-        assert len(cells) == 4, f"{label}: expected 4 margins, got {cells}"
-        found[arch] = {ds: (float(v.replace("−", "-")), name)
-                       for ds, (v, name) in zip(DATASETS, cells)}
-    return found
-
-
-def test_readme_margins_match_the_per_seed_numbers(repo_root, common):
-    stated = _readme_margins(repo_root)
-    for _, arch in ROWS:
-        for ds in DATASETS:
-            value, name = stated[arch][ds]
-            margin, best = _margin(common[arch][ds])
-            assert name == LABEL[best], (
-                f"{arch}/{ds}: README names {name} as the best conventional "
-                f"activation, the data says {LABEL[best]}")
-            assert round(margin, 2) == value, (
-                f"{arch}/{ds}: README says {value:+.2f} pp, the data says "
-                f"{margin:+.2f} pp")
 
 
 def test_the_transferred_curve_wins_fifteen_of_sixteen(common):

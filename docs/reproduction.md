@@ -12,15 +12,15 @@ pip install -e ".[dev]"
 pytest -q
 ```
 
-The suite comprises 59 tests, which verify the claims rather than merely the
+The suite comprises 58 tests, which verify the claims rather than merely the
 execution of the code: that the GELU initialisation matches the reported fit,
 that K is configurable, that each of the four architectures holds exactly one
 shared activation instance, that a frozen curve receives no update under an
 AdamW step with weight decay, that an unfrozen curve does receive one, that
 only coefficients are transferred from source to target, and that a
-deliberately introduced source weight is detected. Five of the 59 compare the
-fused CUDA kernel against the reference path and skip without a GPU, and five
-recompute every number quoted in README.md from `results/tables/`.
+deliberately introduced source weight is detected. Five of the 58 compare the
+fused CUDA kernel against the reference path and skip without a GPU, and four
+recompute the figures quoted in README.md from `results/tables/`.
 
 The transfer step may also be exercised in isolation, using the distributed
 artifact and requiring no checkpoint:

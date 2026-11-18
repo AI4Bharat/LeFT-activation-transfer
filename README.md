@@ -67,7 +67,7 @@ pip install -e ".[train,dev]"            # and target-network training
 pip install -e ".[train,imagenet,dev]"   # and re-training of the ImageNet-1K source
 # alternatively: conda env create -f environment.yml && conda activate left
 
-pytest -q                                # 59 tests; no datasets required (5 need a GPU and skip without one)
+pytest -q                                # 58 tests; no datasets required (5 need a GPU and skip without one)
 ```
 
 `ninja` is required only for the fused CUDA kernels; the pure-PyTorch path
@@ -136,21 +136,6 @@ scripts/evaluate.sh
 
 Results are reported as means over seeds with sample standard deviations, and
 comparisons between two activations as seed-matched mean differences.
-`left.evaluation.metrics` implements these statistics and additionally provides
-a paired t-test with Holm correction across the four datasets, and
-`notebooks/results_analysis.ipynb` reproduces the tables of the manuscript from
-`results/tables/*.json`.
-
-Margin of the transferred curve over the best-performing conventional
-activation per dataset, under the common configuration, in percentage points
-(the paper's summary table, over five seeds):
-
-| Target        | Fashion-MNIST | CIFAR-10          | CIFAR-100         | Food-101           |
-| ------------- | ------------- | ----------------- | ----------------- | ------------------ |
-| ViT-d2        | +0.53 (ReLU)  | +1.04 (LeakyReLU) | +0.72 (ReLU)      | +1.71 (LeakyReLU)  |
-| Swin-d2       | +1.05 (GELU)  | +1.65 (GELU)      | +1.09 (GELU)      | +0.88 (GELU)       |
-| LinViT-d2     | +0.38 (ReLU)  | +1.21 (ReLU)      | +1.48 (ReLU)      | +1.62 (LeakyReLU)  |
-| MLP-Mixer     | +0.62 (ReLU)  | +0.48 (LeakyReLU) | +0.29 (LeakyReLU) | **−1.05 (GELU)**   |
 
 ## Pretrained artifacts
 
