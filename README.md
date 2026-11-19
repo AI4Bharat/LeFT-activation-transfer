@@ -1,4 +1,4 @@
-# LeFT — Learn, Freeze, Transfer
+# LeFT: Learn, Freeze, and Transfer an Activation Function Across Architectures
 
 **LeFT learns a globally shared activation function inside a source network,
 freezes it, and transfers it to independently initialized target networks
