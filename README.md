@@ -4,24 +4,17 @@
 freezes it, and transfers it to independently initialized target networks
 without transferring any source-network weights.**
 
-FAct, a five-parameter truncated Fourier series, is the first activation
-implemented in the framework. A single curve is learned jointly with a depth-6,
-approximately 3M-parameter ViT on ImageNet-1K, frozen, and installed in four
-independently initialized target architectures as a parameter-free activation.
-Under a common training configuration it attains the highest mean test accuracy
-among eleven activation choices in **15 of 16** architecture × dataset
-combinations, by up to **1.71** percentage points.
+FAct, a five-parameter truncated Fourier series, is the first activation function implemented in the framework. A single activation function is learned jointly with a depth-6, approximately 3M-parameter ViT on ImageNet-1K and subsequently frozen and transferred to four independently initialized target architectures, where it serves as a fixed activation with no additional trainable parameters. Under a common training configuration, FAct achieves the highest mean test accuracy among eleven activation choices in **15 of 16** architecture–dataset combinations, with improvements of up to **1.71** percentage points.
 
-Paper: *Learn, Freeze, and Transfer an Activation Function Across
-Architectures*.
+Paper: *Learn, Freeze, and Transfer an Activation Function Across Architectures*.
 
 ## Methodology
 
 | Step         | Description                                                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **Learn**    | A single activation module is installed at every activation site of the source network, so that one curve is shared across neurons and across depth, and is optimized jointly with the weights. |
-| **Freeze**   | The learned coefficients are held fixed: they receive no gradient, are excluded from the optimizer, and are exempt from weight decay. The activation therefore contributes **no trainable parameters**. |
-| **Transfer** | The frozen curve is installed in an independently initialized target network as a fixed activation. No other quantity is shared with the source network. |
+| **Learn**    | A single activation function, parameterized by a shared set of coefficients, is used at all activation sites in the source network. The same nonlinear mapping is therefore applied across neurons and network depth. Its coefficients are optimized jointly with the source-network weights. |
+| **Freeze**   | Following source-network training, the learned activation coefficients are fixed and extracted as an independent artifact. They receive no further gradient updates and are excluded from the target-network optimizer. Consequently, the activation introduces no additional trainable parameters during target training.. |
+| **Transfer** | The frozen activation function is incorporated into independently initialized target architectures and remains fixed throughout their training. Only the learned activation coefficients are transferred; no source-network weights or other learned parameters are reused. |
 
 ## FAct
 
@@ -29,11 +22,7 @@ Architectures*.
 φ(t) = a₀ + Σ_{k=1..K} [ a_k cos(k ω t) + b_k sin(k ω t) ]
 ```
 
-At K = 2 the activation consists of five scalars for an entire network. The
-coefficients are initialized at the truncated Fourier fit of GELU, so that the
-network initially computes a close approximation of the GELU baseline and any
-subsequent difference is attributable to the learning of the curve. The curve
-transferred in the paper is
+At K=2, with the fundamental frequency fixed at ω=1, the activation is parameterized by five Fourier coefficients shared across the entire network. These coefficients are initialized using the truncated Fourier-series approximation of GELU, providing a GELU-like initial activation while allowing the shared curve to adapt through joint optimization with the network weights. The learned activation transferred in the paper is:
 
 ```
 θ* = (a₀, a₁, a₂, b₁, b₂) = (0.2182, 0.1193, −0.4237, 0.8315, −0.5918)
@@ -43,21 +32,19 @@ extracted from the seed-1 ImageNet-1K source checkpoint and distributed as
 [`artifacts/fact/imagenet1k_vitd6_seed1.json`](artifacts/fact/imagenet1k_vitd6_seed1.json).
 
 ## Architecture support
+The supported architectures span global self-attention, shifted-window attention, linear attention, and attention-free token mixing, providing a basis for evaluating activation transfer across different architectural designs.
 
-| Target        | Module                  | Attention       | Parameters        | Config                           |
+| Architecture       | Module                  | Attention mechanism      | Trainable parameters       | Config                           |
 | ------------- | ----------------------- | --------------- | ----------------- | -------------------------------- |
-| **ViT**       | `left.models.vit`       | softmax, global | 105,098 – 123,237 | `configs/targets/vit_d2.yaml`     |
-| **Swin**      | `left.models.swin`      | shifted-window  | 102,354 – 110,317 | `configs/targets/swin_d2.yaml`    |
-| **LinViT**    | `left.models.linvit`    | elu+1 linear    | 105,098 – 123,237 | `configs/targets/linvit_d2.yaml`  |
-| **MLP-Mixer** | `left.models.mlp_mixer` | none            | 103,620 – 126,313 | `configs/targets/mlp_mixer.yaml`  |
+| **ViT**       | `left.models.vit`       | Global softmax self-attention | 105,098 – 123,237 | `configs/targets/vit_d2.yaml`     |
+| **Swin**      | `left.models.swin`      | Shifted-window self-attention  | 102,354 – 110,317 | `configs/targets/swin_d2.yaml`    |
+| **LinViT**    | `left.models.linvit`    | ELU+1 kernelized linear attention   | 105,098 – 123,237 | `configs/targets/linvit_d2.yaml`  |
+| **MLP-Mixer** | `left.models.mlp_mixer` | No attention           | 103,620 – 126,313 | `configs/targets/mlp_mixer.yaml`  |
 
-The range is over the four datasets, which differ in input channels, resolution
-and class count; every activation is compared at the same parameter count on a
-given architecture and dataset, since the frozen curve adds none.
+The range is over the four datasets, which differ in input channels, resolution and class count. For each architecture–dataset combination, all activation functions are evaluated using an identical network configuration and parameter count. The transferred FAct contributes no additional trainable parameters, as its five coefficients remain frozen throughout target training.
 
-Datasets: Fashion-MNIST, CIFAR-10, CIFAR-100 and Food-101. Baselines: ReLU,
-LeakyReLU, GELU, SiLU, ELU, Tanh, Mish, Softplus, HardSwish and SELU, each at
-its library default.
+Datasets: Fashion-MNIST, CIFAR-10, CIFAR-100 and Food-101. 
+Baselines: ReLU, LeakyReLU, GELU, SiLU, ELU, Tanh, Mish, Softplus, HardSwish and SELU
 
 ## Installation
 
@@ -70,8 +57,7 @@ pip install -e ".[train,imagenet,dev]"   # and re-training of the ImageNet-1K so
 pytest -q                                # 55 tests; no datasets required (5 need a GPU and skip without one)
 ```
 
-`ninja` is required only for the fused CUDA kernels; the pure-PyTorch path
-(`--no-cuda-kernel`) is numerically identical.
+`ninja` is required only for the fused CUDA kernels; the pure-PyTorch path (`--no-cuda-kernel`) is numerically identical.
 
 ## Dataset preparation
 
@@ -83,14 +69,13 @@ scripts/prepare_data.sh
 No dataset is redistributed in this repository.
 
 * **Fashion-MNIST** and **Food-101** are downloaded on first use.
-* **CIFAR-10** and **CIFAR-100** are decoded once from the HuggingFace parquet
-  release in stored row order and verified against the SHA-256 digests of the
+* **CIFAR-10** and **CIFAR-100** are decoded once from the HuggingFace parquet release in stored row order and verified against the SHA-256 digests of the
   published runs.
 * **ImageNet-1K** is required only in order to re-learn the curve.
 
 ## Training
 
-Step 1, **Learn** (ImageNet-1K; several days). This step may be omitted, as the
+Step 1, **Learn** (ImageNet-1K). This step is optional, as the
 only output consumed by the remainder of the pipeline is distributed in
 `artifacts/`.
 
@@ -105,7 +90,7 @@ ARCHS=vit DATASETS=cifar10 SEEDS=0 ACTS="fact_fixed gelu" scripts/train_targets.
 scripts/train_targets.sh           # the complete grid
 ```
 
-All arms use identical hyperparameters. The recipes in `configs/` are consumed
+All arms use identical hyperparameters. The recipes in `configs/` are used
 directly: `--config` merges a YAML file into the defaults of the script,
 explicit flags take precedence over it, and an unrecognized key raises an error.
 
